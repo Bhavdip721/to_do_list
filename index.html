@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="./image/icon.png" type="image/x-icon" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <title>To Do list</title>
+  </head>
+
+  <style type="text/tailwindcss">
+    @layer components {
+      .btn-primary {
+        @apply px-2 py-1;
+        @apply border border-orange-600;
+        @apply rounded-xl;
+        @apply hover:bg-orange-600;
+        @apply transition duration-500;
+      }
+    }
+  </style>
+
+  <body class="bg-orange-400 text-white">
+    <header class="sticky top-0 bg-orange-500 py-4">
+      <button class="block md:hidden pl-8" onclick="nav()">&#9776;</button>
+      <div
+        id="sidenav"
+        class="hidden fixed top-0 z-100 bg-orange-400 w-7/10 min-h-screen px-8 flex-col gap-4"
+      >
+        <button onclick="closenav()" class="self-start mt-4">&times;</button>
+        <button onclick="closenav()" class="btn-primary">TO DO List</button>
+        <button onclick="closenav()" class="btn-primary">Calculator</button>
+
+        <button onclick="closenav()" class="btn-primary">
+          Currency Converter
+        </button>
+        <button onclick="closenav()" class="btn-primary">Digital Clock</button>
+        <button onclick="closenav()" class="btn-primary">Form</button>
+      </div>
+
+      <nav class="hidden md:flex justify-between px-8 items-center">
+        <button class="btn-primary">TO DO List</button>
+        <button class="btn-primary">Calculator</button>
+
+        <button class="btn-primary">Currency Converter</button>
+        <button class="btn-primary">Digital Clock</button>
+        <button class="btn-primary">Form</button>
+      </nav>
+    </header>
+
+    <div class="flex justify-center px-8">
+      <div
+        class="w-full md:w-xl flex flex-col gap-2 mt-8 p-8 bg-orange-300 rounded-xl"
+      >
+        <h1 class="mt-2 text-5xl font-bold self-center">To Do</h1>
+        <div
+          class="mt-4 flex gap-4 md:gap-8 px-4 md:px-8 py-4 border border-orange-600 rounded-xl shadow-md"
+        >
+          <input
+            id="task"
+            type="text"
+            placeholder="Add your task"
+            class="w-full flex-1 p-2 outline-none ring-1 ring-orange-500 rounded-xl focus:ring-1 focus:ring-red-700 transition duration-500"
+          />
+          <button
+            id="add_task"
+            class="font-semibold px-2 py-1 bg-orange-600 border border-orange-600 rounded-xl outline-none hover:bg-orange-700 hover:text-white transition duration-500"
+          >
+            Add Task
+          </button>
+        </div>
+        <button
+          id="delete-all"
+          class="mt-4 self-end border border-orange-600 bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600 transition duration-500"
+        >
+          delete all
+        </button>
+        <div id="list" class="flex flex-col gap-4"></div>
+      </div>
+    </div>
+
+    <script src="./todo.js"></script>
+  </body>
+</html>

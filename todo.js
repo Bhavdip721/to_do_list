@@ -47,22 +47,29 @@ rendertask();
 
 document.getElementById("list").addEventListener("click", (e) => {
   if (e.target.classList.contains("delete")) {
-    let task_value = e.target.getAttribute("data-value");
+    let task_value = e.target.getAttribute("data-value").trim();
 
     if (confirm(`are you sure delete ${task_value} ?`)) {
       let task = JSON.parse(localStorage.getItem("data"));
       let new_task = task.filter((item) => item != task_value);
       localStorage.setItem("data", JSON.stringify(new_task));
       rendertask();
+      document.getElementById("task").value = "";
+      document.getElementById("add_task").innerHTML = "Add Task";
       return;
     }
   }
 });
 
 document.getElementById("delete-all").addEventListener("click", () => {
-  if (confirm("are you sure delete all ??")) {
-    localStorage.clear();
-    rendertask();
+  if (localStorage.getItem("data")) {
+    if (confirm("are you sure delete all ??")) {
+      localStorage.removeItem("data");
+      rendertask();
+      return;
+    }
+  } else {
+    alert("not any task in list!");
     return;
   }
 });
@@ -93,7 +100,7 @@ document.getElementById("delete-all").addEventListener("click", () => {
 let taskToEdit = null;
 document.getElementById("list").addEventListener("click", (e) => {
   if (e.target.classList.contains("edit")) {
-    let task_value = e.target.getAttribute("data-value");
+    let task_value = e.target.getAttribute("data-value").trim();
     let htmlcontent = document.getElementById("task");
     htmlcontent.focus();
     htmlcontent.value = task_value;

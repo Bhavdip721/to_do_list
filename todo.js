@@ -31,8 +31,9 @@ function rendertask() {
   htmlcontent.innerHTML = data
     .map(
       (task) =>
-        `<div class="border border-orange-600 p-4 rounded-xl">
-           <p class="text-lg  border border-orange-600 rounded-xl py-2 px-4"> ${task}</p>
+        `<div class="border border-orange-600 p-4 rounded-xl" id="task-contain">
+           <input type="checkbox" title="mark for complete" class="complete" data-value="${task}"/>
+           <p class="text-lg  border border-orange-600 rounded-xl py-2 px-4" id="work"> ${task}</p>
             <div class="flex flex-wrap gap-4 mt-4">
             <button data-value="${task}" class="edit border border-orange-600 bg-green-500 px-2 py-1 rounded-xl hover:bg-green-600 transition duration-500">update<botton>
             <button data-value="${task}" class="delete border border-orange-600 bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600 transition duration-500">delete<botton>
@@ -150,5 +151,15 @@ document.getElementById("add_task").addEventListener("click", () => {
   } else {
     alert("same value not vaild");
     return;
+  }
+});
+document.getElementById("task-contain").addEventListener("change", (e) => {
+  if (e.target.classList.contains("complete")) {
+    let taskText = e.target.nextElementSibling;
+    if (e.target.checked) {
+      taskText.classList.add("line-through", "text-black");
+    } else {
+      taskText.classList.remove("line-through", "text-black");
+    }
   }
 });

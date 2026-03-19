@@ -32,7 +32,7 @@ function rendertask() {
     .map(
       (task) =>
         `<div class="border border-orange-600 p-4 rounded-xl" id="task-contain">
-           <input type="checkbox" title="mark for complete" class="complete" data-value="${task}"/>
+           <input type="checkbox" title="mark for complete" class="complete"/>
            <p class="text-lg  border border-orange-600 rounded-xl py-2 px-4" id="work"> ${task}</p>
             <div class="flex flex-wrap gap-4 mt-4">
             <button data-value="${task}" class="edit border border-orange-600 bg-green-500 px-2 py-1 rounded-xl hover:bg-green-600 transition duration-500">update<botton>
@@ -153,13 +153,17 @@ document.getElementById("add_task").addEventListener("click", () => {
     return;
   }
 });
-document.getElementById("task-contain").addEventListener("change", (e) => {
+document.getElementById("list").addEventListener("change", (e) => {
   if (e.target.classList.contains("complete")) {
     let taskText = e.target.nextElementSibling;
     if (e.target.checked) {
       taskText.classList.add("line-through", "text-black");
+      return;
     } else {
       taskText.classList.remove("line-through", "text-black");
+      return;
     }
+  } else {
+    return;
   }
 });

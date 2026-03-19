@@ -19,7 +19,7 @@ function rendertask() {
            <p class="text-lg  border border-orange-600 rounded-xl py-2 px-4" id="work"> ${task}</p>
             <div class="flex flex-wrap gap-4 mt-4">
             <button data-value="${task}" class="edit border border-black bg-green-400 px-2 py-1 rounded-xl hover:bg-green-600 hover:text-white transition duration-500">update<botton>
-            <button data-value="${task}" class="delete border border-black bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600  hover:text-white transition duration-500">delete<botton>
+            <button data-value="${task}" class="delete border border-black bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600  text-white transition duration-500">delete<botton>
          </div> 
        </div>
        `,

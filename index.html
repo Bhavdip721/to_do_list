@@ -12,26 +12,32 @@
     @layer components {
       .btn-primary {
         @apply px-2 py-1;
-        @apply border border-orange-600;
+        @apply border border-black;
         @apply rounded-xl;
         @apply hover:bg-orange-600;
         @apply transition duration-500;
+        @apply bg-orange-400;
       }
     }
   </style>
 
-  <body class="bg-orange-400 text-white">
-    <header class="sticky top-0 bg-orange-500 py-4">
+  <body>
+    <!-- header -->
+    <header class="sticky top-0 py-4 bg-orange-200">
       <button class="block md:hidden pl-8" onclick="nav()">&#9776;</button>
       <div
         id="sidenav"
-        class="hidden fixed top-0 z-100 bg-orange-400 w-7/10 min-h-screen px-8 flex-col gap-4"
+        class="hidden fixed top-0 z-100 bg-orange-100 w-7/10 min-h-screen px-8 flex-col gap-4"
       >
         <button onclick="closenav()" class="self-start mt-4">&times;</button>
-        <button onclick="closenav()" class="btn-primary">TO DO List</button>
-        <button onclick="closenav()" class="btn-primary">Calculator</button>
+        <button onclick="closenav()" class="btn-primary todo-btn">
+          TO DO List
+        </button>
+        <button onclick="closenav()" class="btn-primary calulator-btn">
+          Calculator
+        </button>
 
-        <button onclick="closenav()" class="btn-primary">
+        <button onclick="closenav()" class="btn-primary currency-btn">
           Currency Converter
         </button>
         <button onclick="closenav()" class="btn-primary">Digital Clock</button>
@@ -39,22 +45,23 @@
       </div>
 
       <nav class="hidden md:flex justify-between px-8 items-center">
-        <button class="btn-primary">TO DO List</button>
-        <button class="btn-primary">Calculator</button>
+        <button class="btn-primary todo-btn">TO DO List</button>
+        <button class="btn-primary calulator-btn">Calculator</button>
 
-        <button class="btn-primary">Currency Converter</button>
+        <button class="btn-primary currency-btn">Currency Converter</button>
         <button class="btn-primary">Digital Clock</button>
         <button class="btn-primary">Form</button>
       </nav>
     </header>
+    <h1 class="text-5xl text-center mt-4">Task</h1>
 
-    <div class="flex justify-center px-8">
+    <!-- to do list -->
+    <section class="flex justify-center px-8" id="todo_list">
       <div
-        class="w-full md:w-xl flex flex-col gap-2 mt-8 p-8 bg-orange-300 rounded-xl"
+        class="w-full md:w-xl flex flex-col gap-2 mt-8 p-4 border border-orange-600 rounded-xl"
       >
-        <h1 class="mt-2 text-5xl font-bold self-center">To Do</h1>
         <div
-          class="mt-4 flex gap-4 md:gap-8 px-4 md:px-8 py-4 border border-orange-600 rounded-xl shadow-md"
+          class="mt-4 flex gap-4 flex-col md:flex-row md:gap-8 px-4 md:px-8 py-4 border border-orange-600 rounded-xl shadow-md"
         >
           <input
             id="task"
@@ -64,21 +71,133 @@
           />
           <button
             id="add_task"
-            class="font-semibold px-2 py-1 bg-orange-600 border border-orange-600 rounded-xl outline-none hover:bg-orange-700 hover:text-white transition duration-500"
+            class="self-end md:self-stretch font-semibold px-2 py-1 bg-orange-400 border border-black rounded-xl outline-none hover:bg-orange-700 hover:text-white transition duration-500"
           >
             Add Task
           </button>
         </div>
         <button
           id="delete-all"
-          class="mt-4 self-end border border-orange-600 bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600 transition duration-500"
+          class="mt-4 self-end border border-black bg-red-500 px-2 py-1 rounded-xl hover:bg-red-600 hover:text-white transition duration-500"
         >
           delete all
         </button>
         <div id="list" class="flex flex-col gap-4"></div>
       </div>
-    </div>
+    </section>
 
+    <!-- calculator -->
+    <section id="calculator" class="hidden px-8 flex justify-center mt-8">
+      <div class="w-full md:w-xl px-4 py-8 border border-orange-600 rounded-xl">
+        <div
+          id="cal-content"
+          class="w-full min-h-20 h-auto border border-orange-600 rounded-xl"
+        >
+          <p id="entered_value" class="px-4 break-words"></p>
+          <p id="ans"></p>
+        </div>
+        <div class="grid grid-cols-4 gap-2 mt-8" id="cal-btn">
+          <button class="btn-primary" data="ce">CE</button>
+          <button class="btn-primary col-span-2" data="ac">AC</button>
+          <button class="btn-primary" data="/">/</button>
+          <button class="btn-primary" data="7">7</button>
+          <button class="btn-primary" data="8">8</button>
+          <button class="btn-primary" data="9">9</button>
+          <button class="btn-primary" data="*">*</button>
+          <button class="btn-primary" data="4">4</button>
+          <button class="btn-primary" data="5">5</button>
+          <button class="btn-primary" data="6">6</button>
+          <button class="btn-primary" data="-">-</button>
+          <button class="btn-primary" data="1">1</button>
+          <button class="btn-primary" data="2">2</button>
+          <button class="btn-primary" data="3">3</button>
+          <button class="btn-primary" data="+">+</button>
+          <button class="btn-primary col-span-2" data="0">0</button>
+          <button class="btn-primary" data=".">.</button>
+          <button class="btn-primary" data="=" id="answer">=</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- currency converter -->
+    <section id="currency_converter" class="hidden mt-8 px-8">
+      <div
+        class="flex flex-col gap-8 items-center p-4 border border-orange-600 rounded-xl"
+      >
+        <input
+          id="amount"
+          type="number"
+          class="outline-none self-center border border-black p-2 rounded-xl focus:ring-2 focus:ring-black"
+          placeholder="enter value"
+        />
+        <div class="flex flex-col md:flex-row gap-12">
+          <div class="flex flex-col sm:flex-row gap-4 items-center">
+            <label for="form" class="font-bold text-xl">From : </label>
+            <select
+              name="from"
+              id="currency-from"
+              class="border border-black p-2 rounded-xl"
+            >
+              <option value="93.26" selected>Indian Rupee (₹)</option>
+              <option value="1">US Dollar ($)</option>
+              <option value="0.87">Euro (€)</option>
+              <option value="0.75">British Pound Sterling (£)</option>
+              <option value="159.25">Japanese Yen (¥)</option>
+              <option value="1.42">Australian Dollar ($)</option>
+              <option value="1.37">Canadian Dollar ($)</option>
+              <option value="0.80">Swiss Franc (CHF)</option>
+              <option value="6.87">Chinese Yuan (¥)</option>
+              <option value="86.03">Russian Ruble (₽)</option>
+              <option value="17.85">Mexican Peso ($)</option>
+              <option value="5.42">Brazilian Real (R$)</option>
+              <option value="19.10">South African Rand (R)</option>
+              <option value="1.38">Singapore Dollar ($)</option>
+              <option value="1.68">New Zealand Dollar ($)</option>
+              <option value="7.82">HKD: Hong Kong Dollar (HK$)</option>
+              <option value="10.65">SEK: Swedish Krona (kr)</option>
+              <option value="1,365.40">South Korean Won (₩)</option>
+              <option value="3.67">UAE Dirham (د.إ)</option>
+            </select>
+          </div>
+          <div class="flex gap-4 flex-col sm:flex-row items-center">
+            <label for="form" class="font-bold text-xl">To : </label>
+            <select
+              name="from"
+              id="currency-to"
+              class="border border-black p-2 rounded-xl"
+            >
+              <option value="93.26" selected>Indian Rupee (₹)</option>
+              <option value="1">US Dollar ($)</option>
+              <option value="0.87">Euro (€)</option>
+              <option value="0.75">British Pound Sterling (£)</option>
+              <option value="159.25">Japanese Yen (¥)</option>
+              <option value="1.42">Australian Dollar ($)</option>
+              <option value="1.37">Canadian Dollar ($)</option>
+              <option value="0.80">Swiss Franc (CHF)</option>
+              <option value="6.87">Chinese Yuan (¥)</option>
+              <option value="86.03">Russian Ruble (₽)</option>
+              <option value="17.85">Mexican Peso ($)</option>
+              <option value="5.42">Brazilian Real (R$)</option>
+              <option value="19.10">South African Rand (R)</option>
+              <option value="1.38">Singapore Dollar ($)</option>
+              <option value="1.68">New Zealand Dollar ($)</option>
+              <option value="7.82">HKD: Hong Kong Dollar (HK$)</option>
+              <option value="10.65">SEK: Swedish Krona (kr)</option>
+              <option value="1,365.40">South Korean Won (₩)</option>
+              <option value="3.67">UAE Dirham (د.إ)</option>
+            </select>
+          </div>
+        </div>
+
+        <button
+          id="convert"
+          class="border border-black bg-orange-400 px-4 py-2 text-xl rounded-xl hover:bg-orange-600 hover:text-white transition duration-500"
+        >
+          Convert
+        </button>
+        <div id="convert-currency" class="text-xl font-bold"></div>
+      </div>
+    </section>
     <script src="./todo.js"></script>
   </body>
 </html>

@@ -131,6 +131,7 @@ document.getElementById("list").addEventListener("change", (e) => {
 let todo = document.querySelectorAll(".todo-btn");
 todo.forEach((btn) => {
   btn.addEventListener("click", () => {
+    document.getElementById("clock").style.display = "none";
     document.getElementById("todo_list").style.display = "flex";
     document.getElementById("calculator").style.display = "none";
     document.getElementById("currency_converter").style.display = "none";
@@ -141,6 +142,7 @@ todo.forEach((btn) => {
 let cal = document.querySelectorAll(".calulator-btn");
 cal.forEach((btn) => {
   btn.addEventListener("click", () => {
+    document.getElementById("clock").style.display = "none";
     document.getElementById("calculator").style.display = "flex";
     document.getElementById("todo_list").style.display = "none";
     document.getElementById("currency_converter").style.display = "none";
@@ -291,6 +293,7 @@ currency.forEach((btn) => {
   btn.addEventListener("click", () => {
     document.getElementById("todo_list").style.display = "none";
     document.getElementById("calculator").style.display = "none";
+    document.getElementById("clock").style.display = "none";
     document.getElementById("currency_converter").style.display = "block";
   });
 });
@@ -314,4 +317,120 @@ document.getElementById("convert").addEventListener("click", (e) => {
   let ans = amount / ratio;
   let htmlcontent = `<p>${ans}</p>`;
   document.getElementById("convert-currency").innerHTML = htmlcontent;
+});
+
+// clock
+
+let clock = document.querySelectorAll(".clock-btn");
+clock.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("todo_list").style.display = "none";
+    document.getElementById("calculator").style.display = "none";
+    document.getElementById("currency_converter").style.display = "none";
+    document.getElementById("clock").style.display = "flex";
+  });
+});
+
+function clock_time() {
+  const htmlcontent = document.getElementById("time");
+  setInterval(() => {
+    let now = new Date();
+    const current_time = now.toLocaleTimeString();
+    htmlcontent.innerText = current_time;
+  }, 1000);
+}
+clock_time();
+
+document.getElementById("timer_set").addEventListener("click", (e) => {
+  document.getElementById("timer_value").removeAttribute("disabled");
+  document.getElementById("timer_value").focus();
+});
+document.getElementById("timer_value").addEventListener("mouseleave", () => {
+  document.getElementById("timer_value").setAttribute("disabled", "");
+});
+
+let time_remain;
+document.getElementById("timer_start").addEventListener("click", () => {
+  let timer_value = document.getElementById("timer_value").value;
+  if (timer_value == "00:00:00") {
+    alert("enter the correct time");
+    return;
+  }
+  let [hour, minutes, second] = String(timer_value).split(":");
+  if (hour > 60 || minutes > 60 || second > 60) {
+    alert("enter the vaild time");
+    return;
+  }
+  let total_second = 0;
+  if (hour != undefined) {
+    total_second += Number(hour) * 3600;
+  }
+  if (minutes != undefined) {
+    total_second += Number(minutes) * 60;
+  }
+  if (second != undefined) {
+    total_second += Number(second);
+  }
+  document.getElementById("timer").innerText = `${hour}:${minutes}:${second}`;
+  time_remain = setInterval(() => {
+    document.getElementById("timer").innerText = `${hour}:${minutes}:${second}`;
+
+    if (second == 0) {
+      if (minutes == 0) {
+        if (hour != 0) {
+          hour--;
+          minutes = 59;
+        }
+      } else {
+        second = 59;
+        minutes--;
+      }
+    }
+    second--;
+    total_second--;
+    if (total_second == 0) {
+      alert("your time is up !!");
+      document.getElementById("timer").innerText = `00:00:00`;
+      document.getElementById("timer_value").value = "00:00:00";
+      clearInterval(time_remain);
+    }
+  }, 1000);
+});
+document.getElementById("timer_clear").addEventListener("click", () => {
+  if (confirm("are you sure ??")) {
+    clearInterval(time_remain);
+    document.getElementById("timer").innerText = `00:00:00`;
+    document.getElementById("timer_value").value = "00:00:00";
+    return;
+  } else {
+    return;
+  }
+});
+
+let stop_watch;
+document.getElementById("watch_start").addEventListener("click", () => {
+  let s = 0;
+  let m = 0;
+  let h = 0;
+  let htmlcontent = document.getElementById("watch");
+  stop_watch = setInterval(() => {
+    htmlcontent.innerText = `${h}:${m}:${s}`;
+    s++;
+    if (s == 59) {
+      s = 0;
+      if (m == 59) {
+        m = 0;
+        h++;
+        if (h == 59) {
+          clearInterval(stop_watch);
+        }
+      } else {
+        m++;
+      }
+    }
+  }, 1000);
+});
+document.getElementById("watch_stop").addEventListener("click", () => {
+  clearInterval(stop_watch);
+  document.getElementById("watch").innerText = "00:00:00";
 });

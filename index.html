@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" href="./image/icon.png" type="image/x-icon" />
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <title>To Do list</title>
+    <title>Task</title>
   </head>
 
   <style type="text/tailwindcss">
@@ -23,7 +23,7 @@
 
   <body>
     <!-- header -->
-    <header class="sticky top-0 py-4 bg-orange-200">
+    <header class="sticky top-0 py-4 bg-orange-100">
       <button class="block md:hidden pl-8" onclick="nav()">&#9776;</button>
       <div
         id="sidenav"
@@ -40,7 +40,9 @@
         <button onclick="closenav()" class="btn-primary currency-btn">
           Currency Converter
         </button>
-        <button onclick="closenav()" class="btn-primary">Digital Clock</button>
+        <button onclick="closenav()" class="btn-primary clock-btn">
+          Digital Clock
+        </button>
         <button onclick="closenav()" class="btn-primary">Form</button>
       </div>
 
@@ -49,7 +51,7 @@
         <button class="btn-primary calulator-btn">Calculator</button>
 
         <button class="btn-primary currency-btn">Currency Converter</button>
-        <button class="btn-primary">Digital Clock</button>
+        <button class="btn-primary clock-btn">Digital Clock</button>
         <button class="btn-primary">Form</button>
       </nav>
     </header>
@@ -198,6 +200,44 @@
         <div id="convert-currency" class="text-xl font-bold"></div>
       </div>
     </section>
+
+    <!-- clock -->
+
+    <section id="clock" class="hidden mt-4 justify-center px-8">
+      <div class="border border-orange-600 w-full md:w-xl rounded-xl p-4">
+        <div class="border border-orange-600 rounded-xl p-4">
+          <h2 class="text-2xl font-bold">Time</h2>
+          <p id="time" class="text-2xl mt-4"></p>
+        </div>
+        <div class="border border-orange-600 w-full mt-4 rounded-xl p-4">
+          <h2 class="text-2xl font-bold">Timer</h2>
+          <p class="text-2xl mt-4" id="timer">00:00:00</p>
+          <input
+            type="text"
+            id="timer_value"
+            value="00:00:00"
+            class="mt-4 border border-black rounded-xl p-2 outline-none focus:ring-2"
+            maxlength="8"
+            title="format-hours:minutes:seconds"
+            disabled
+          />
+          <div class="flex gap-2 mt-4">
+            <button class="btn-primary px-4" id="timer_set">Set</button>
+            <button class="btn-primary" id="timer_start">start</button>
+            <button class="btn-primary" id="timer_clear">Clear</button>
+          </div>
+        </div>
+        <div class="border border-orange-600 w-full mt-4 rounded-xl p-4">
+          <h2 class="text-2xl font-bold">Stop watch</h2>
+          <p class="text-2xl mt-4" id="watch">00:00:00</p>
+          <div class="flex gap-2 mt-4">
+            <button class="btn-primary" id="watch_start">Start</button>
+            <button class="btn-primary" id="watch_stop">Stop</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <script src="./todo.js"></script>
   </body>
 </html>

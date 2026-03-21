@@ -132,6 +132,7 @@ let todo = document.querySelectorAll(".todo-btn");
 todo.forEach((btn) => {
   btn.addEventListener("click", () => {
     document.getElementById("clock").style.display = "none";
+    document.getElementById("form").style.display = "none";
     document.getElementById("todo_list").style.display = "flex";
     document.getElementById("calculator").style.display = "none";
     document.getElementById("currency_converter").style.display = "none";
@@ -145,6 +146,7 @@ cal.forEach((btn) => {
     document.getElementById("clock").style.display = "none";
     document.getElementById("calculator").style.display = "flex";
     document.getElementById("todo_list").style.display = "none";
+    document.getElementById("form").style.display = "none";
     document.getElementById("currency_converter").style.display = "none";
   });
 });
@@ -234,6 +236,33 @@ addEventListener("keydown", (e) => {
       value_string = value_string.slice(0, value_string.length - 1);
       enter_value.innerText = value_string;
       break;
+
+    case "Enter":
+      function answer() {
+        document.getElementById("answer");
+
+        if (
+          ["*", "/", "+", "-"].includes(value_string[value_string.length - 1])
+        ) {
+          console.log("true");
+          return;
+        }
+
+        for (let x = 0; x < value_string.length - 1; x++) {
+          if (
+            (value_string[x] == value_string[x + 1]) == "/" ||
+            (value_string[x] == value_string[x + 1]) == "*" ||
+            (value_string[x] == value_string[x + 1]) == "+" ||
+            (value_string[x] == value_string[x + 1]) == "-"
+          ) {
+            console.log("true");
+            return;
+          }
+        }
+        let ans = eval(value_string);
+        document.getElementById("ans").innerText = ans;
+      }
+      answer();
   }
 });
 
@@ -284,6 +313,8 @@ document.getElementById("answer").addEventListener("click", function answer() {
       return;
     }
   }
+  let ans = eval(value_string);
+  document.getElementById("ans").innerText = ans;
 });
 
 // currency_converter
@@ -294,6 +325,7 @@ currency.forEach((btn) => {
     document.getElementById("todo_list").style.display = "none";
     document.getElementById("calculator").style.display = "none";
     document.getElementById("clock").style.display = "none";
+    document.getElementById("form").style.display = "none";
     document.getElementById("currency_converter").style.display = "block";
   });
 });
@@ -327,6 +359,7 @@ clock.forEach((btn) => {
     document.getElementById("todo_list").style.display = "none";
     document.getElementById("calculator").style.display = "none";
     document.getElementById("currency_converter").style.display = "none";
+    document.getElementById("form").style.display = "none";
     document.getElementById("clock").style.display = "flex";
   });
 });
@@ -408,7 +441,8 @@ document.getElementById("timer_clear").addEventListener("click", () => {
 });
 
 let stop_watch;
-document.getElementById("watch_start").addEventListener("click", () => {
+document.getElementById("watch_start").addEventListener("click", (e) => {
+  e.target.disabled = true;
   let s = 0;
   let m = 0;
   let h = 0;
@@ -433,4 +467,217 @@ document.getElementById("watch_start").addEventListener("click", () => {
 document.getElementById("watch_stop").addEventListener("click", () => {
   clearInterval(stop_watch);
   document.getElementById("watch").innerText = "00:00:00";
+  document.getElementById("watch_start").removeAttribute("disabled");
+});
+
+// form
+let form = document.querySelectorAll(".form-btn");
+form.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.getElementById("todo_list").style.display = "none";
+    document.getElementById("calculator").style.display = "none";
+    document.getElementById("currency_converter").style.display = "none";
+    document.getElementById("clock").style.display = "none";
+    document.getElementById("form").style.display = "flex";
+  });
+});
+
+async function getdata() {
+  let res = await fetch("https://countriesnow.space/api/v0.1/countries", {});
+
+  let data = await res.json();
+
+  let countries = document.getElementById("country");
+  data.data.map((item) => {
+    let option = document.createElement("option");
+    // option.value = item.iso2;
+    option.value = item.country;
+    option.innerText = item.country;
+    countries.appendChild(option);
+  });
+}
+getdata();
+
+document.getElementById("country").addEventListener("change", async () => {
+  let country = document.getElementById("country").value;
+  let state = document.getElementById("state");
+  // console.log(country);
+  state.innerHTML = `<option  disabled selected>Select your state</option>`;
+  let res = await fetch(`https://countriesnow.space/api/v0.1/countries/states`);
+  let data = await res.json();
+
+  let target_country = data.data.filter((item) => item.name == country);
+  // console.log(target_country);
+  let states = target_country[0];
+  // console.log(states.states);
+  states.states.map((item) => {
+    let option = document.createElement("option");
+    option.innerText = item.name;
+    option.value = item.name;
+    // option.value = item.iso2;
+    state.appendChild(option);
+  });
+
+  let city = document.getElementById("city");
+  city.innerHTML = `<option  disabled selected>Select your city</option>`;
+});
+
+document.getElementById("state").addEventListener("change", async () => {
+  let country = document.getElementById("country").value;
+  let state = document.getElementById("state").value;
+  let city = document.getElementById("city");
+  // console.log(country);
+  city.innerHTML = `<option  disabled selected>Select your state</option>`;
+  let req = await fetch(
+    `https://countriesnow.space/api/v0.1/countries/state/cities`,
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        country: country,
+        state: state,
+      }),
+    },
+  );
+  let res = await req.json();
+  res.data.map((item) => {
+    let option = document.createElement("option");
+    option.innerText = item;
+    option.value = item;
+    city.appendChild(option);
+  });
+});
+
+// document.getElementById("country").addEventListener("change", async () => {
+//   let country = document.getElementById("country").value;
+//   let state = document.getElementById("state");
+
+//   state.innerHTML = `<option  disabled selected>Select your state</option>`;
+//   let res = await fetch(
+//     `https://api.countrystatecity.in/v1/countries/${country}/states`,
+
+//     {
+//       headers: {
+//         "X-CSCAPI-KEY":
+//           "5c5c81da0b89f3713671335904eddf179d1852ac2e7e2748e04ebf76bbddd727",
+//         "Content-Type": "application/json",
+//       },
+//       redirect: "follow",
+//     },
+//   );
+//   let data = await res.json();
+
+//   data.map((item) => {
+//     let option = document.createElement("option");
+//     option.innerText = item.name;
+//     option.value = item.iso2;
+//     state.appendChild(option);
+//   });
+//   let city = document.getElementById("city");
+//   city.innerHTML = `<option  disabled selected>Select your city</option>`;
+// });
+// document.getElementById("state").addEventListener("change", async () => {
+//   let country = document.getElementById("country").value;
+//   let state = document.getElementById("state").value;
+//   let city = document.getElementById("city");
+//   city.innerHTML = `<option  disabled selected>Select your city</option>`;
+//   let res = await fetch(
+//     `https://api.countrystatecity.in/v1/countries/${country}/states/${state}/cities`,
+//     {
+//       headers: {
+//         "X-CSCAPI-KEY":
+//           "5c5c81da0b89f3713671335904eddf179d1852ac2e7e2748e04ebf76bbddd727",
+//       },
+//     },
+//   );
+//   let data = await res.json();
+
+//   data.map((item) => {
+//     let option = document.createElement("option");
+//     option.innerText = item.name;
+//     option.value = item.iso2;
+//     city.appendChild(option);
+//   });
+// });
+
+document.getElementById("pin_number").addEventListener("input", (e) => {
+  let pin = document.getElementById("pin_number");
+  let pin_value = e.target.value;
+
+  let warning_pin = document.getElementById("warning_pin");
+
+  if (pin_value.length < 6) {
+    if (!warning_pin) {
+      let warning_pin = document.createElement("p");
+      warning_pin.id = "warning_pin";
+      warning_pin.innerText = " 6 digit pin requied";
+      warning_pin.style.color = "red";
+      document.getElementById("pincode").after(warning_pin);
+    }
+    number.setCustomValidity("pincode should be 6 digit");
+  } else {
+    if (warning_pin) {
+      warning_pin.remove();
+    }
+    pin.setCustomValidity("");
+  }
+  if (pin_value.length == 0) {
+    if (warning_pin) {
+      warning_pin.remove();
+    }
+  }
+});
+document.getElementById("number").addEventListener("input", (e) => {
+  let number = document.getElementById("number");
+  let number_value = e.target.value;
+  let warning = document.getElementById("warning");
+
+  if (number_value.length != 10) {
+    if (!warning) {
+      let warning = document.createElement("p");
+      warning.id = "warning";
+      warning.innerText = "10 digit number";
+      warning.style.color = "red";
+      document.getElementById("number_container").after(warning);
+    }
+    number.setCustomValidity("number should be 10 digit");
+  } else {
+    if (warning) {
+      warning.remove();
+    }
+    number.setCustomValidity("");
+  }
+  if (number_value.length == 0) {
+    if (warning) {
+      warning.remove();
+    }
+  }
+});
+
+document.getElementById("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  alert("add sucessfully");
+  let form_data = new FormData(e.target);
+  let data = Object.fromEntries(form_data);
+  let req = await fetch(
+    "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
+
+    {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      method: "POST",
+    },
+  );
+  try {
+    if (!req.ok) {
+      throw new Error(`${req.status}`);
+    }
+    console.log("add sucessyfully");
+  } catch (e) {
+    console.log(e.message);
+  }
 });

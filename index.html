@@ -43,7 +43,7 @@
         <button onclick="closenav()" class="btn-primary clock-btn">
           Digital Clock
         </button>
-        <button onclick="closenav()" class="btn-primary">Form</button>
+        <button onclick="closenav()" class="btn-primary form-btn">Form</button>
       </div>
 
       <nav class="hidden md:flex justify-between px-8 items-center">
@@ -52,7 +52,7 @@
 
         <button class="btn-primary currency-btn">Currency Converter</button>
         <button class="btn-primary clock-btn">Digital Clock</button>
-        <button class="btn-primary">Form</button>
+        <button class="btn-primary form-btn">Form</button>
       </nav>
     </header>
     <h1 class="text-5xl text-center mt-4">Task</h1>
@@ -96,7 +96,7 @@
           class="w-full min-h-20 h-auto border border-orange-600 rounded-xl"
         >
           <p id="entered_value" class="px-4 break-words"></p>
-          <p id="ans"></p>
+          <p id="ans" class="mt-4 text-2xl font-bold px-4"></p>
         </div>
         <div class="grid grid-cols-4 gap-2 mt-8" id="cal-btn">
           <button class="btn-primary" data="ce">CE</button>
@@ -157,7 +157,7 @@
               <option value="1.68">New Zealand Dollar ($)</option>
               <option value="7.82">HKD: Hong Kong Dollar (HK$)</option>
               <option value="10.65">SEK: Swedish Krona (kr)</option>
-              <option value="1,365.40">South Korean Won (₩)</option>
+
               <option value="3.67">UAE Dirham (د.إ)</option>
             </select>
           </div>
@@ -185,7 +185,7 @@
               <option value="1.68">New Zealand Dollar ($)</option>
               <option value="7.82">HKD: Hong Kong Dollar (HK$)</option>
               <option value="10.65">SEK: Swedish Krona (kr)</option>
-              <option value="1,365.40">South Korean Won (₩)</option>
+
               <option value="3.67">UAE Dirham (د.إ)</option>
             </select>
           </div>
@@ -234,6 +234,155 @@
             <button class="btn-primary" id="watch_start">Start</button>
             <button class="btn-primary" id="watch_stop">Stop</button>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- from -->
+    <section id="form" class="hidden justify-center px-8 mt-4">
+      <div class="w-full md:w-xl flex flex-col gap-4">
+        <form
+          id="form_user"
+          method="post"
+          class="flex flex-col gap-4 w-full border border-orange-600 rounded-xl p-4"
+        >
+          <div class="flex gap-4 items-center flex-col sm:flex-row">
+            <label for="name">Name</label>
+            <input
+              id="form-name"
+              type="text"
+              name="name"
+              class="outline-none border border-black rounded-xl p-2 focus:ring-2"
+              placeholder="enter your name"
+              required
+            />
+          </div>
+          <div class="flex gap-4 items-center flex-col sm:flex-row">
+            <label for="email">email</label>
+            <input
+              type="email"
+              name="email"
+              class="outline-none border border-black rounded-xl p-2 focus:ring-2"
+              placeholder="enter your mail"
+              required
+            />
+          </div>
+          <div class="flex items-center gap-4 items-center">
+            <label class="flex gap-2 items-center">
+              <input type="radio" name="gender" value="male" required />
+              <span>Male</span>
+            </label>
+            <label class="flex gap-2 items-center">
+              <input type="radio" name="gender" value="Female" required />
+              <span>Female</span>
+            </label>
+          </div>
+          <div
+            class="flex gap-4 items-center flex-col sm:flex-row"
+            id="number_container"
+          >
+            <label for="number">Number</label>
+            <input
+              id="number"
+              type="tel"
+              name="number"
+              pattern="[0-9]{10}"
+              class="outline-none border border-black rounded-xl p-2 focus:ring-2"
+              placeholder=" eg 9908886759"
+              required
+            />
+          </div>
+          <div>
+            <div
+              class="flex gap-4 items-center flex-col sm:flex-row text-xs sm:text-base"
+            >
+              <label for="country">Country</label>
+              <select
+                name="country"
+                id="country"
+                class="border p-2 rounded-xl"
+                required
+              >
+                <option disabled selected hidden>Select your country</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex gap-4 items-center flex-col sm:flex-row">
+            <label for="state">State</label>
+            <select
+              name="state"
+              id="state"
+              class="border p-2 rounded-xl"
+              required
+            ></select>
+          </div>
+
+          <div class="flex gap-4 items-center flex-col sm:flex-row">
+            <label for="city">City</label>
+            <select
+              name="city"
+              id="city"
+              class="border p-2 rounded-xl"
+              required
+            ></select>
+          </div>
+          <div
+            class="flex gap-4 items-center flex-col sm:flex-row"
+            id="pincode"
+          >
+            <label for="pincode">Pincode</label>
+            <input
+              type="text"
+              placeholder="eg 787887"
+              class="border rounded-xl outline-none p-2 focus:ring-2"
+              name="pincode"
+              id="pin_number"
+              maxlength="6"
+              pattern="[0-9]{6}"
+              required
+            />
+          </div>
+          <textarea
+            name="bio"
+            id="bio"
+            placeholder="about you"
+            class="border rounded-xl p-2 outline-none focus:ring-2"
+            required
+          ></textarea>
+          <textarea
+            name="description"
+            id="dis"
+            placeholder="description"
+            class="border rounded-xl p-2 outline-none focus:ring-2"
+            required
+          ></textarea>
+
+          <button type="submit" class="btn-primary self-center">submit</button>
+        </form>
+
+        <div
+          class="w-full flex flex-col gap-4 p-4 border border-orange-600 rounded-xl"
+        >
+          <div
+            class="border border-orange-600 rounded-xl p-4 flex flex-col sm:flex-row gap-4"
+          >
+            <input
+              type="search"
+              id="search"
+              placeholder="search by name or mail"
+              class="border rounded-xl flex-1 p-2 outline-none focus:ring-2"
+            />
+            <div class="self-end">
+              <button>
+                <img
+                  src="./image/filter-icon.svg"
+                  alt="filter icon"
+                  class="w-8 h-auto"
+                />
+              </button>
+            </div>
+          </div>
+          <div id="user"></div>
         </div>
       </div>
     </section>

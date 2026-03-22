@@ -14,7 +14,7 @@
         @apply px-2 py-1;
         @apply border border-black;
         @apply rounded-xl;
-        @apply hover:bg-orange-600;
+        @apply hover:bg-orange-600 hover:text-white;
         @apply transition duration-500;
         @apply bg-orange-400;
       }
@@ -23,7 +23,7 @@
 
   <body>
     <!-- header -->
-    <header class="sticky top-0 py-4 bg-orange-100">
+    <header class="sticky top-0 py-4 bg-orange-100 z-100">
       <button class="block md:hidden pl-8" onclick="nav()">&#9776;</button>
       <div
         id="sidenav"
@@ -239,7 +239,7 @@
     </section>
 
     <!-- from -->
-    <section id="form" class="hidden justify-center px-8 mt-4">
+    <section id="form" class="hidden justify-center px-2 mt-4">
       <div class="w-full md:w-xl flex flex-col gap-4">
         <form
           id="form_user"
@@ -254,6 +254,7 @@
               name="name"
               class="outline-none border border-black rounded-xl p-2 focus:ring-2"
               placeholder="enter your name"
+              pattern="^[^\s]+$"
               required
             />
           </div>
@@ -267,7 +268,9 @@
               required
             />
           </div>
-          <div class="flex items-center gap-4 items-center">
+          <div
+            class="flex items-center gap-4 items-center self-center sm:self-start"
+          >
             <label class="flex gap-2 items-center">
               <input type="radio" name="gender" value="male" required />
               <span>Male</span>
@@ -363,9 +366,7 @@
         <div
           class="w-full flex flex-col gap-4 p-4 border border-orange-600 rounded-xl"
         >
-          <div
-            class="border border-orange-600 rounded-xl p-4 flex flex-col sm:flex-row gap-4"
-          >
+          <div class="flex flex-col sm:flex-row gap-4">
             <input
               type="search"
               id="search"
@@ -382,7 +383,8 @@
               </button>
             </div>
           </div>
-          <div id="user"></div>
+          <div id="user" class="flex flex-col gap-4"></div>
+          <div class="flex gap-2 overflow-x-auto" id="pagination-btn"></div>
         </div>
       </div>
     </section>

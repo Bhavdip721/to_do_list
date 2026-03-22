@@ -655,29 +655,193 @@ document.getElementById("number").addEventListener("input", (e) => {
     }
   }
 });
+let total_user = 0;
+let user_data;
+async function totalcount() {
+  let res = await fetch(
+    "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
+  );
+  let data = await res.json();
+  total_user = data.length;
+  user_data = data;
+}
 
 document.getElementById("form").addEventListener("submit", async (e) => {
   e.preventDefault();
-  alert("add sucessfully");
-  let form_data = new FormData(e.target);
-  let data = Object.fromEntries(form_data);
-  let req = await fetch(
-    "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
 
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-      method: "POST",
-    },
-  );
   try {
+    let res = await fetch(
+      "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
+    );
+    if (!res.ok) {
+      throw new Error(`Error:${res.ok}`);
+    }
+
+    let user = await res.json();
+    let form_data = new FormData(e.target);
+    let data = Object.fromEntries(form_data);
+
+    if (user.length != 0) {
+      let find_user = user.some(
+        (user) =>
+          user.name == form_data.get("name") ||
+          user.number == form_data.get("number") ||
+          user.email == form_data.get("email"),
+      );
+      if (find_user) {
+        alert("same data not vaild");
+        return;
+      }
+    }
+
+    let req = await fetch(
+      "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
+
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+        method: "POST",
+      },
+    );
     if (!req.ok) {
       throw new Error(`${req.status}`);
     }
-    console.log("add sucessyfully");
+    alert("add sucessfully");
+    userdata();
   } catch (e) {
     console.log(e.message);
+  }
+});
+
+async function userdata(page = 1) {
+  let list = document.getElementById("user");
+  let btns = document.getElementById("pagination-btn");
+  totalcount();
+
+  try {
+    let res = await fetch(
+      `https://69b3bc38e224ec066bdced1f.mockapi.io/test/user/?page=${page}&limit=5`,
+    );
+
+    if (!res.ok) {
+      throw new Error(`Error:${res.ok}`);
+    }
+    btns.innerHTML = "";
+    let user = await res.json();
+    let btn_number = 1;
+    for (let x = 0; x < total_user; x += 5) {
+      let btn = document.createElement("button");
+      btn.classList.add("btn-primary");
+      btn.classList.add("px-4");
+      btn.classList.add("btn-clicked");
+      btn.setAttribute("data-value", btn_number);
+      btn.innerHTML = btn_number;
+      btns.append(btn);
+      btn_number++;
+    }
+    let htmlcontent = `<p class="text-red-500 text-xl">no data<p>`;
+    if (user.length != 0) {
+      htmlcontent = user
+        .map((user) => {
+          return `
+    <div class="flex flex-col gap-4 border border-orange-600 rounded-xl p-4 user-container">
+       <div><p> Name: ${user.name}</p>
+       <p> Email: ${user.email}</p>
+       <button class="btn-primary mt-4 view_details">View details</button>
+       </div>
+       
+     <div class="pt-10 border border-orange-600 rounded-xl px-2 pb-2 grid-cols-1 md:grid-cols-3  gap-2 hidden relative details">
+     <button class="btn-primary absolute top-2 right-2 close">Close</button>
+       <p> Number: ${user.number}</p>
+          <p> Gender: ${user.gender}</p>
+            <p>Country: ${user.country}</p>
+              <p> State: ${user.state}</p>
+                <p> City: ${user.city}</p>
+                  <p> Pin: ${user.pincode}</p>
+                    <p class=" break-words"> Description: ${user.description}</p>
+                      <p class=" break-words"> Bio: ${user.bio}</p>
+      </div>
+    </div>
+     `;
+        })
+        .join("");
+    } else {
+    }
+    list.innerHTML = htmlcontent;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
+userdata();
+
+document.getElementById("user").addEventListener("click", (e) => {
+  const parent = e.target.closest(".user-container");
+  const details = parent.querySelector(".details");
+  if (e.target.classList.contains("view_details")) {
+    details.style.display = "grid";
+  }
+  if (e.target.classList.contains("close")) {
+    details.style.display = "none";
+  }
+});
+
+document.getElementById("pagination-btn").addEventListener("click", (e) => {
+  if (e.target.classList.contains("btn-clicked")) {
+    userdata(e.target.getAttribute("data-value"));
+    // console.log(e.target.getAttribute("data-value"));
+  }
+});
+
+document.getElementById("search").addEventListener("input", async (e) => {
+  let search_text = e.target.value;
+  let htmlcontent;
+  if (user_data != 0 && search_text.length != 0) {
+    let user_data_search = user_data.filter((user) => {
+      if (
+        user.name.startsWith(search_text) ||
+        user.email.startsWith(search_text)
+      ) {
+        return user;
+      } else {
+        return;
+      }
+    });
+    if (user_data_search.length == 0) {
+      htmlcontent = `<p class="text-red-500 text-xl">no user found with ${search_text}</p>`;
+      document.getElementById("user").innerHTML = htmlcontent;
+    } else {
+      htmlcontent = user_data_search
+        .map((user) => {
+          return `
+    <div class="flex flex-col gap-4 border border-orange-600 rounded-xl p-4 user-container">
+       <div><p> Name: ${user.name}</p>
+       <p> Email: ${user.email}</p>
+       <button class="btn-primary mt-4 view_details">View details</button>
+       </div>
+       
+     <div class="pt-10 border border-orange-600 rounded-xl px-2 pb-2 grid-cols-1 md:grid-cols-3  gap-2 hidden relative details">
+     <button class="btn-primary absolute top-2 right-2 close">Close</button>
+       <p> Number: ${user.number}</p>
+          <p> Gender: ${user.gender}</p>
+            <p>Country: ${user.country}</p>
+              <p> State: ${user.state}</p>
+                <p> City: ${user.city}</p>
+                  <p> Pin: ${user.pincode}</p>
+                    <p class=" break-words"> Description: ${user.description}</p>
+                      <p class=" break-words"> Bio: ${user.bio}</p>
+      </div>
+    </div>
+     `;
+        })
+        .join("");
+    }
+    document.getElementById("user").innerHTML = htmlcontent;
+    document.getElementById("pagination-btn").classList.add("hidden");
+  }
+  if (search_text == 0) {
+    userdata();
+    document.getElementById("pagination-btn").classList.remove("hidden");
   }
 });

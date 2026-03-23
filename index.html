@@ -373,14 +373,42 @@
               placeholder="search by name or mail"
               class="border rounded-xl flex-1 p-2 outline-none focus:ring-2"
             />
-            <div class="self-end">
-              <button>
+            <div class="relative self-end">
+              <button id="filter">
                 <img
                   src="./image/filter-icon.svg"
                   alt="filter icon"
                   class="w-8 h-auto"
                 />
               </button>
+
+              <div
+                id="popup-body"
+                class="popup-body bg-white shadow-sm rounded-md p-2 hidden absolute top-10 right-2"
+              >
+                <select
+                  id="filter-country"
+                  class="hidden border p-2 rounded-xl"
+                  required
+                >
+                  <option disabled selected hidden>Select your country</option>
+                </select>
+
+                <select
+                  id="filter-state"
+                  class="hidden border p-2 rounded-xl"
+                  required
+                ></select>
+
+                <select
+                  id="filter-city"
+                  class="hidden border p-2 rounded-xl"
+                  required
+                ></select>
+                <button class="btn-primary hidden" id="filter-btn">
+                  filter
+                </button>
+              </div>
             </div>
           </div>
           <div id="user" class="flex flex-col gap-4"></div>

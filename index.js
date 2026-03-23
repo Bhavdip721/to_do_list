@@ -710,6 +710,7 @@ document.getElementById("form").addEventListener("submit", async (e) => {
     }
     alert("add sucessfully");
     userdata();
+    e.target.reset();
   } catch (e) {
     console.log(e.message);
   }
@@ -843,5 +844,147 @@ document.getElementById("search").addEventListener("input", async (e) => {
   if (search_text == 0) {
     userdata();
     document.getElementById("pagination-btn").classList.remove("hidden");
+  }
+});
+
+document.getElementById("filter").addEventListener("click", async (e) => {
+  let popupBody = document.getElementById("popup-body");
+  if (popupBody.classList.contains("block")) {
+    popupBody.classList.add("hidden");
+    popupBody.classList.remove("block");
+  } else {
+    popupBody.classList.remove("hidden");
+    popupBody.classList.add("block");
+  }
+  let country = document.getElementById("filter-country");
+  country.classList.remove("hidden");
+
+  let res = await fetch("https://countriesnow.space/api/v0.1/countries", {});
+
+  let data = await res.json();
+
+  let countries = document.getElementById("filter-country");
+  data.data.map((item) => {
+    let option = document.createElement("option");
+    // option.value = item.iso2;
+    option.value = item.country;
+    option.innerText = item.country;
+    countries.appendChild(option);
+  });
+});
+document
+  .getElementById("filter-country")
+  .addEventListener("change", async (e) => {
+    let state = document.getElementById("filter-state");
+    state.classList.remove("hidden");
+
+    let country = e.target.value;
+
+    state.innerHTML = `<option  disabled selected>Select your state</option>`;
+    let res = await fetch(
+      `https://countriesnow.space/api/v0.1/countries/states`,
+    );
+    let data = await res.json();
+
+    let target_country = data.data.filter((item) => item.name == country);
+
+    let states = target_country[0];
+
+    states.states.map((item) => {
+      let option = document.createElement("option");
+      option.innerText = item.name;
+      option.value = item.name;
+
+      state.appendChild(option);
+    });
+
+    let city = document.getElementById("city");
+    city.innerHTML = `<option  disabled selected>Select your city</option>`;
+  });
+
+document.getElementById("filter-state").addEventListener("change", async () => {
+  let country = document.getElementById("filter-country").value;
+  let state = document.getElementById("filter-state").value;
+
+  let city = document.getElementById("filter-city");
+  city.classList.remove("hidden");
+
+  // console.log(country);
+  city.innerHTML = `<option  disabled selected>Select your state</option>`;
+  let req = await fetch(
+    `https://countriesnow.space/api/v0.1/countries/state/cities`,
+    {
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        country: country,
+        state: state,
+      }),
+    },
+  );
+  let res = await req.json();
+  res.data.map((item) => {
+    let option = document.createElement("option");
+    option.innerText = item;
+    option.value = item;
+    city.appendChild(option);
+  });
+});
+
+document.getElementById("filter-city").addEventListener("change", () => {
+  let filter_btn = document.getElementById("filter-btn");
+  filter_btn.classList.remove("hidden");
+});
+
+document.getElementById("filter-btn").addEventListener("click", () => {
+  let city = document.getElementById("filter-city").value;
+  let list = document.getElementById("user");
+
+  if (city) {
+    let data = user_data.filter((user) => user.state == state);
+    let htmlcontent;
+    if (data.length != 0) {
+      htmlcontent = data
+        .map((user) => {
+          return `
+    <div class="flex flex-col gap-4 border border-orange-600 rounded-xl p-4 user-container">
+       <div><p> Name: ${user.name}</p>
+       <p> Email: ${user.email}</p>
+       <button class="btn-primary mt-4 view_details">View details</button>
+       </div>
+       
+     <div class="pt-10 border border-orange-600 rounded-xl px-2 pb-2 grid-cols-1 md:grid-cols-3  gap-2 hidden relative details">
+     <button class="btn-primary absolute top-2 right-2 close">Close</button>
+       <p> Number: ${user.number}</p>
+          <p> Gender: ${user.gender}</p>
+            <p>Country: ${user.country}</p>
+              <p> State: ${user.state}</p>
+                <p> City: ${user.city}</p>
+                  <p> Pin: ${user.pincode}</p>
+                    <p class=" break-words"> Description: ${user.description}</p>
+                      <p class=" break-words"> Bio: ${user.bio}</p>
+      </div>
+    </div>
+     `;
+        })
+        .join("");
+    } else {
+      htmlcontent = `<p class="text-red-500">no data found</p>`;
+      setTimeout(() => {
+        userdata();
+      }, 2000);
+    }
+    document.getElementById("filter-country").innerHTML =
+      `<option disabled selected hidden>Select your country</option>`;
+    document.getElementById("filter-state").classList.add("hidden");
+    document.getElementById("filter-city").classList.add("hidden");
+    document.getElementById("filter-btn").classList.add("hidden");
+    list.innerHTML = htmlcontent;
+    document.getElementById("popup-body").classList.add("hidden");
+    document.getElementById("pagination-btn").classList.toggle("hidden");
+  } else {
+    userdata();
   }
 });

@@ -230,6 +230,7 @@ addEventListener("keydown", (e) => {
     case "Delete":
       value_string = "";
       enter_value.innerText = value_string;
+      document.getElementById("ans").innerText = "";
       break;
 
     case "Backspace":

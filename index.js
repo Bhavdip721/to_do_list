@@ -669,49 +669,88 @@ async function totalcount() {
 
 document.getElementById("form").addEventListener("submit", async (e) => {
   e.preventDefault();
+  console.log(update_status, update_id);
 
   try {
+    let form_data = new FormData(e.target);
+    let data = Object.fromEntries(form_data);
     let res = await fetch(
       "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
     );
     if (!res.ok) {
       throw new Error(`Error:${res.ok}`);
     }
-
     let user = await res.json();
-    let form_data = new FormData(e.target);
-    let data = Object.fromEntries(form_data);
 
-    if (user.length != 0) {
-      let find_user = user.some(
-        (user) =>
-          user.name == form_data.get("name") ||
-          user.number == form_data.get("number") ||
-          user.email == form_data.get("email"),
-      );
-      if (find_user) {
-        alert("same data not vaild");
-        return;
+    if (update_status) {
+      if (user.length != 0) {
+        let find_user = user.some((user) => {
+          if (user.id == update_id) {
+            return false;
+          }
+          return (
+            user.name == form_data.get("name") ||
+            user.number == form_data.get("number") ||
+            user.email == form_data.get("email")
+          );
+        });
+        if (find_user) {
+          alert("same data not vaild");
+          return;
+        }
       }
-    }
 
-    let req = await fetch(
-      "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
-
-      {
-        headers: {
-          "Content-Type": "application/json",
+      let res_update = await fetch(
+        `https://69b3bc38e224ec066bdced1f.mockapi.io/test/user/${update_id}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
         },
-        body: JSON.stringify(data),
-        method: "POST",
-      },
-    );
-    if (!req.ok) {
-      throw new Error(`${req.status}`);
+      );
+      if (!res_update.ok) {
+        throw new Error(`Error:${res.status}`);
+      }
+
+      document.getElementById("submit").innerText = "submit";
+      update_status = false;
+      e.target.reset();
+      alert("update sucessfully !!");
+      userdata();
+    } else {
+      if (user.length != 0) {
+        let find_user = user.some(
+          (user) =>
+            user.name == form_data.get("name") ||
+            user.number == form_data.get("number") ||
+            user.email == form_data.get("email"),
+        );
+        if (find_user) {
+          alert("same data not vaild");
+          return;
+        }
+      }
+
+      let req = await fetch(
+        "https://69b3bc38e224ec066bdced1f.mockapi.io/test/user",
+
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+          method: "POST",
+        },
+      );
+      if (!req.ok) {
+        throw new Error(`${req.status}`);
+      }
+      alert("add sucessfully");
+      userdata();
+      e.target.reset();
     }
-    alert("add sucessfully");
-    userdata();
-    e.target.reset();
   } catch (e) {
     console.log(e.message);
   }
@@ -751,7 +790,8 @@ async function userdata(page = 1) {
     <div class="flex flex-col gap-4 border border-orange-600 rounded-xl p-4 user-container">
        
     <div class="flex flex-col gap-1">
-    <button class="border border-black rounded-xl px-2 py-1 text-white hover:bg-red-700 bg-red-500 self-end " onclick="deleteUser(${user.id})">Delete</button>
+    <div class="flex gap-2 self-end">  <button class="border border-black rounded-xl px-2 py-1 text-white hover:bg-green-700 bg-green-500 transition duration-500" onclick="update(${user.id})">update</button>
+    <button class="border border-black rounded-xl px-2 py-1 text-white hover:bg-red-700 bg-red-500 transition duration-500" onclick="deleteUser(${user.id})">Delete</button></div>
     <p> Name: ${user.name}</p>
        <p> Email: ${user.email}</p>
        <button class="btn-primary mt-4 view_details w-fit">View details</button>
@@ -773,7 +813,6 @@ async function userdata(page = 1) {
      `;
         })
         .join("");
-    } else {
     }
     list.innerHTML = htmlcontent;
   } catch (e) {
@@ -781,7 +820,34 @@ async function userdata(page = 1) {
   }
 }
 userdata();
+let update_status = false;
+let update_id;
+async function update(id) {
+  try {
+    update_id = id;
+    let user = await fetch(
+      `https://69b3bc38e224ec066bdced1f.mockapi.io/test/user/${id}`,
+    );
+    if (!user.ok) {
+      throw new Error(`Error:${user.status}`);
+    }
+    let data = await user.json();
 
+    let form = document.getElementById("form-name");
+    form.focus();
+    form.value = data.name;
+    document.getElementById("email").value = data.email;
+    document.getElementById("number").value = data.number;
+    document.getElementById("bio").value = data.bio;
+    document.getElementById("pin_number").value = data.pincode;
+    document.getElementById("dis").value = data.description;
+
+    document.getElementById("submit").innerText = "save";
+    update_status = true;
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 async function deleteUser(id) {
   try {
     if (confirm(`are you sure delete user?`)) {
@@ -789,6 +855,7 @@ async function deleteUser(id) {
         `https://69b3bc38e224ec066bdced1f.mockapi.io/test/user/${id}`,
         {
           method: "DELETE",
+          headers: { "Content-Type": "application/json" },
         },
       );
       userdata();

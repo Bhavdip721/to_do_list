@@ -754,7 +754,7 @@ async function userdata(page = 1) {
     <button class="border border-black rounded-xl px-2 py-1 text-white hover:bg-red-700 bg-red-500 self-end " onclick="deleteUser(${user.id})">Delete</button>
     <p> Name: ${user.name}</p>
        <p> Email: ${user.email}</p>
-       <button class="btn-primary mt-4 view_details">View details</button>
+       <button class="btn-primary mt-4 view_details w-fit">View details</button>
        </div>
 
        

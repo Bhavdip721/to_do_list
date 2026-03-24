@@ -891,8 +891,8 @@ document.getElementById("search").addEventListener("input", async (e) => {
   if (user_data != 0 && search_text.length != 0) {
     let user_data_search = user_data.filter((user) => {
       if (
-        user.name.startsWith(search_text) ||
-        user.email.startsWith(search_text)
+        user.name.toLowerCase().startsWith(search_text.toLowerCase()) ||
+        user.email.toLowerCase().startsWith(search_text.toLowerCase())
       ) {
         return user;
       } else {

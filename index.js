@@ -749,10 +749,14 @@ async function userdata(page = 1) {
         .map((user) => {
           return `
     <div class="flex flex-col gap-4 border border-orange-600 rounded-xl p-4 user-container">
-       <div><p> Name: ${user.name}</p>
+       
+    <div class="flex flex-col gap-1">
+    <button class="border border-black rounded-xl px-2 py-1 text-white hover:bg-red-700 bg-red-500 self-end " onclick="deleteUser(${user.id})">Delete</button>
+    <p> Name: ${user.name}</p>
        <p> Email: ${user.email}</p>
        <button class="btn-primary mt-4 view_details">View details</button>
        </div>
+
        
      <div class="pt-10 border border-orange-600 rounded-xl px-2 pb-2 grid-cols-1 md:grid-cols-3  gap-2 hidden relative details">
      <button class="btn-primary absolute top-2 right-2 close">Close</button>
@@ -778,6 +782,24 @@ async function userdata(page = 1) {
 }
 userdata();
 
+async function deleteUser(id) {
+  try {
+    if (confirm(`are you sure delete user?`)) {
+      let res = await fetch(
+        `https://69b3bc38e224ec066bdced1f.mockapi.io/test/user/${id}`,
+        {
+          method: "DELETE",
+        },
+      );
+      userdata();
+      if (!res.ok) {
+        throw new Error("not fetch");
+      }
+    }
+  } catch (e) {
+    console.log(e.message);
+  }
+}
 document.getElementById("user").addEventListener("click", (e) => {
   const parent = e.target.closest(".user-container");
   const details = parent.querySelector(".details");
